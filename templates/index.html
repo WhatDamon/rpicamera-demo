@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Camera App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#takePhotoButton").click(function(){
+                $.post("/take_photo", function(data){
+                    $("#photoDisplay").attr("src", "data:image/jpeg;base64," + data.photo_base64);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Take a Photo</h1>
+    <button id="takePhotoButton">Take Photo</button>
+    <h2>Photo Preview:</h2>
+    <img id="photoDisplay" src="" alt="Taken Photo" style="max-width: 100%;">
+</body>
+</html>
