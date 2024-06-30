@@ -16,20 +16,29 @@ led2 = LED(17)
 
 # 拍照函数
 def take_photo():
+    try:
+        # 设置GPIO 4和17为高电平
+        led1.on()
+        led2.on()
+
+        # 尝试使用rpicam-still拍照
+        try:
+            process = subprocess.Popen(["rpicam-still", "-o", "-"], stdout=subprocess.PIPE)
+        except FileNotFoundError:
+            # 如果rpicam-still不存在，则使用libcamera-still
+            process = subprocess.Popen(["libcamera-still", "-o", "-"], stdout=subprocess.PIPE)
+
+        stdout, stderr = process.communicate()
+
+        # 将图片数据转换为Pillow图像对象
+        img = Image.open(io.BytesIO(stdout))
+    finally:
+        # 完成后恢复GPIO 4和17为低电平
+        led1.off()
+        led2.off()
     # 将led1代表的GPIO和led2代表队GPIO设置为高电平
     led1.on()
     led2.on()
-    
-    # 使用libcamera-still命令行工具捕获图像, 当然这要求你已经提前安装了libcamera!
-    process = subprocess.run(["libcamera-still", "-o", "-"], stdout=subprocess.PIPE)
-    if process.returncode != 0:
-        print("Failed to capture image")
-        led1.off()
-        led2.off()
-        return None
-
-    # 将捕获的图像转换为PIL图像
-    img = Image.open(io.BytesIO(process.stdout))
     
     # 将PIL图像转换为字节流
     img_byte_arr = io.BytesIO()

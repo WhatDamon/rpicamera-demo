@@ -23,8 +23,6 @@ _树莓派摄像头官方资料：https://www.raspberrypi.com/documentation/comp
 
 - 确保您的树莓派启用了相机支持, 请配置引导分区的`config.txt`, 或使用 `sudo raspi-config` 启用. Bookworm (Debian 12) 默认已启用
 
-- 在 Bookworm 上, `libcamera` 已经改名为 `rpicam` 使用了符号链接以支持旧名称, 如果您确定您的树莓派已经安装了 `libcamera` 却无法运行本项目, 请尝试将代码中的 `libcamera-` 替换成  `rpicam-`!
-
 - 仅限测试使用, 不要将本项目未经修改直接用于部署, 以避免潜在的风险甚至数据泄露!
 
 ## 项目依赖
@@ -40,18 +38,44 @@ pip install -r requirements.txt
 
 ## 运行
 
+### Flask 版本:
+
 ```bash
-python main.py
+python flaskWebUI.py
 ```
-在同局域网内的任何设备浏览器打开该设备 IP 的 5000 端口页面, 即为本项目 WebUI
+在同局域网内的任何设备浏览器打开该设备 IP 的 __5000__ 端口页面, 即为本项目 WebUI
+
+打开后点击照相按钮即可!
+
+### Gradio 版本:
+
+```bash
+python gradioWebUI.py
+```
+在同局域网内的任何设备浏览器打开该设备 IP 的 __7860__ 端口页面, 即为本项目 WebUI, 当然可以将 `iface.launch()` 设置为 `iface.launch(share=True)` 开启公网共享 (请谨慎使用)
+
+打开以后点击 _“Generate”_ 按钮即可
+
+## TODO
+
+- [ ] 视频录制支持
+- [ ] 自定义 GPIO 引脚控制
+- [ ] 图片另存为
+- [ ] 图片压缩
+- [ ] 自定义变焦
+
+## 截图
+
+![Gradio](./screenshots/gradio.jpeg)
+![Flask](./screenshots/flask.jpeg)
 
 ## 其他
 
 这里只是简单搞了一个测试, 本项目可能长期不会维护, 若要满足个人需求, 欢迎 Fork
 
-当然我也不知道到时候会不会进一步折腾这个项目
+在开启照相后会将 BCM GPIO 4 和 17 调为高电平, 完成后恢复低电平, 可自定义, 针脚定义具体以 https://pinout.xyz 为准
 
-在开启照相后会将 BCM GPIO 4 和 17 调为高电平, 完成后恢复低电平, 可自定义, 针脚定义具体以 pinout.xyz 为准
+项目代码聊天内容已经被 ChatGLM 折腾坏了, 后面 (可能) 会自己搞一些功能
 
 ## 许可证
 
